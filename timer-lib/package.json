@@ -1,0 +1,14 @@
+{
+  "name": "timer-lib",
+  "version": "0.0.0",
+  "description": "Lib for timer/intervall clock",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eric Sundqvist",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.23.1"
+  }
+}
