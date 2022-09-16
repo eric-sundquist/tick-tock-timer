@@ -1,8 +1,9 @@
 {
   "name": "timer-lib",
   "version": "0.0.0",
-  "description": "Lib for timer/intervall clock",
+  "description": "Lib for timer/interval clock",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
