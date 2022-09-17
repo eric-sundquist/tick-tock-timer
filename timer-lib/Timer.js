@@ -26,7 +26,7 @@ export class Timer {
   /**
    * @param {Number} time - Seconds until timer should expire/ring.
    */
-  set setTime(time) {
+  set setTime (time) {
     this.#expireTime = time * 1000
     this.#currentTime = time
   }
@@ -73,5 +73,13 @@ export class Timer {
     this.#isRunning = true
 
     this.#updateTime()
+  }
+
+  pause() {
+    console.log('TOOD: PAUSE TIMER');
+  }
+
+  stop() {
+    console.log('TOOD: STOP TIMER');
   }
 }

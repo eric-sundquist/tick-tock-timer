@@ -23,33 +23,32 @@ document.querySelector('#app').innerHTML = `
   `
 
   const timer = new Timer();
+  setTimeDisplay(timer.getTime)
 
 document.querySelector('#set-timer-form').addEventListener('submit',
 event => {
   event.preventDefault();
-
   const userSetTimerValue = parseInt(document.querySelector('#set-timer').value)
-  console.log(userSetTimerValue);
-  console.log(typeof userSetTimerValue);
-
   timer.setTime = userSetTimerValue
   setTimeDisplay(timer.getTime)
 })
 
-document.querySelector('#start').addEventListener('click', startTimer)
-document.querySelector('#pause').addEventListener('click', pauseTimer)
-document.querySelector('#stop').addEventListener('click', stopTimer)
+document.querySelector('#start').addEventListener('click',
+() => {
+  timer.start()
+})
+
+document.querySelector('#pause').addEventListener('click',
+() => {
+  timer.pause()
+})
+
+document.querySelector('#stop').addEventListener('click',
+() => {
+  timer.stop()
+})
 
 
-
-function startTimer () {
-}
-
-function pauseTimer () {
-}
-
-function stopTimer () {
-}
 
 function setTimeDisplay (time) {
   document.querySelector('#timer-display').textContent = time
