@@ -3,7 +3,7 @@ export class Timer {
   
   #currentTime
   
-  #expireTime
+  #expireTime = 0
   
   #isRunning = false
   
@@ -16,11 +16,30 @@ export class Timer {
 
   /**
    * 
-   * @param {Number} expireTime - Seconds until timer should expire/ring. 
+   * @param {Number} time - Seconds until timer should expire/ring. Defaults to 0.
    */
-  constructor(setTimer) {
-    this.#expireTime = setTimer * 1000
-    this.#currentTime = setTimer
+  constructor(time = 0) {
+    this.#expireTime = time * 1000 // seconds to ms
+    this.#currentTime = time
+  }
+
+  /**
+   * @param {Number} time - Seconds until timer should expire/ring.
+   */
+  set setTime(time) {
+    this.#expireTime = time * 1000
+    this.#currentTime = time
+  }
+
+  /**
+   * @returns {Number} - current time of timer in seconds.
+   */
+  get getTime() {
+    if (this.#startMS) {
+      const timePassedSinceStart = Date.now() - this.#startMS
+      this.#currentTime = this.#expireTime - timePassedSinceStart
+    }
+    return Math.floor(this.#currentTime)
   }
 
   #updateTime() {
@@ -37,23 +56,11 @@ export class Timer {
       return
     }
 
-
-
     // skicka event 'time-updated'
 
-    
     setTimeout(() => this.#updateTime(), this.#updateFrequency)
   }
 
-  /**
-   * @returns {Number} - current time of timer in seconds.
-   */
-  get time() {
-    const timePassedSinceStart = Date.now() - this.#startMS
-    this.#currentTime = this.#expireTime - timePassedSinceStart
-    // return Math.round(this.#currentTime / 1000)
-    return this.#currentTime
-  }
 
   start() {
     if (this.#isRunning) return
