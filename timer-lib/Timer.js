@@ -1,5 +1,5 @@
 export class Timer {
-  #startTime
+  #startMS
   
   #currentTime
   
@@ -10,6 +10,11 @@ export class Timer {
   #isPaused = false
 
   /**
+   * Update frequency (milliseconds)
+   */
+  #updateFrequency = 100
+
+  /**
    * 
    * @param {Number} expireTime - Seconds until timer should expire/ring. 
    */
@@ -18,11 +23,33 @@ export class Timer {
     this.#currentTime = setTimer
   }
 
+  #updateTime() {
+    if (!this.#isRunning || this.#isPaused) return
+
+    // updatera currentTime
+    const timePassedSinceStart = Date.now() - this.#startMS
+    this.#currentTime = this.#expireTime - timePassedSinceStart
+
+    if (this.#currentTime <= 0) {
+      this.#currentTime = 0
+      // Skicka "end" event
+
+      return
+    }
+
+
+
+    // skicka event 'time-updated'
+
+    
+    setTimeout(() => this.#updateTime(), this.#updateFrequency)
+  }
+
   /**
    * @returns {Number} - current time of timer in seconds.
    */
   get time() {
-    const timePassedSinceStart = Date.now() - this.#startTime
+    const timePassedSinceStart = Date.now() - this.#startMS
     this.#currentTime = this.#expireTime - timePassedSinceStart
     // return Math.round(this.#currentTime / 1000)
     return this.#currentTime
@@ -31,7 +58,13 @@ export class Timer {
   start() {
     if (this.#isRunning) return
 
-    this.#startTime = Date.now()
+    if(!this.#isPaused) {
+      this.#startMS = Date.now()
+    }
+    
+    this.#isPaused = false
     this.#isRunning = true
+
+    this.#updateTime()
   }
 }
