@@ -1,25 +1,39 @@
 export class Timer {
-  #startMS
+
+  /**
+   * Milliseconds since Unix epoch when timer started
+   * @type {Number} - milliseconds
+   */
+  #startUnixTime
   
-  #currentTime
+  /**
+   * Current time of timer.
+   * @type {Number} - milliseconds
+   */
+  #currentTime = 0
   
-  #expireTime = 0
+  /**
+   * Set time for timer to expire.
+   * @type {Number} - milliseconds
+   */
+  #timeToExpire = 0
   
   #isRunning = false
   
   #isPaused = false
 
   /**
-   * Update frequency (milliseconds)
+   * Frequency of timer updates. Tick frequency.
+   * @type {Number} - milliseconds
    */
   #updateFrequency = 100
 
   /**
-   * 
-   * @param {Number} time - Seconds until timer should expire/ring. Defaults to 0.
+   * Creates intance of class.
+   * @param {Number} time - milliseconds until timer should expire/ring.
    */
-  constructor(time = 0) {
-    this.#expireTime = time * 1000 // seconds to ms
+  constructor(time) {
+    this.#timeToExpire = time
     this.#currentTime = time
   }
 
@@ -27,27 +41,30 @@ export class Timer {
    * @param {Number} time - Seconds until timer should expire/ring.
    */
   set setTime (time) {
-    this.#expireTime = time * 1000
+    this.#timeToExpire = time * 1000
     this.#currentTime = time
   }
 
   /**
-   * @returns {Number} - current time of timer in seconds.
+   * Returns 
+   * @returns {String} - time in MM:SS format.
    */
   get getTime() {
-    if (this.#startMS) {
-      const timePassedSinceStart = Date.now() - this.#startMS
-      this.#currentTime = this.#expireTime - timePassedSinceStart
+    if (this.#startUnixTime) {
+      const timePassedSinceStart = Date.now() - this.#startUnixTime
+      this.#currentTime = this.#timeToExpire - timePassedSinceStart
+      return Math.floor(this.#currentTime)
+    } else {
+      return '00:00'
     }
-    return Math.floor(this.#currentTime)
   }
 
   #updateTime() {
     if (!this.#isRunning || this.#isPaused) return
 
     // updatera currentTime
-    const timePassedSinceStart = Date.now() - this.#startMS
-    this.#currentTime = this.#expireTime - timePassedSinceStart
+    const timePassedSinceStart = Date.now() - this.#startUnixTime
+    this.#currentTime = this.#timeToExpire - timePassedSinceStart
 
     if (this.#currentTime <= 0) {
       this.#currentTime = 0
@@ -66,7 +83,7 @@ export class Timer {
     if (this.#isRunning) return
 
     if(!this.#isPaused) {
-      this.#startMS = Date.now()
+      this.#startUnixTime = Date.now()
     }
     
     this.#isPaused = false
