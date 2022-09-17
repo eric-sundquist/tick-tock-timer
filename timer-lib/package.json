@@ -10,6 +10,8 @@
   "author": "Eric Sundqvist",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^8.23.1"
+    "eslint": "^8.23.1",
+    "eslint-config-prettier": "^8.5.0",
+    "prettier": "2.7.1"
   }
 }

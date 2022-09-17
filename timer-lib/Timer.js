@@ -1,62 +1,65 @@
 export class Timer {
-
   /**
    * Milliseconds since Unix epoch when timer started
    * @type {Number} - milliseconds
    */
   #startUnixTime
-  
+
   /**
    * Current time of timer.
    * @type {Number} - milliseconds
    */
-  #currentTime = 0
-  
+  #currentTime
+
   /**
    * Set time for timer to expire.
    * @type {Number} - milliseconds
    */
-  #timeToExpire = 0
-  
+  #timeToExpire
+
   #isRunning = false
-  
+
   #isPaused = false
+
+  /**
+   * Emitts timer events and is handle for listening to those events.
+   * @type {HTMLSpanElement}
+   */
+  #eventHandlerElement = document.createElement('span')
 
   /**
    * Frequency of timer updates. Tick frequency.
    * @type {Number} - milliseconds
    */
-  #updateFrequency = 100
+  #updateFrequency = 1000
 
   /**
    * Creates intance of class.
-   * @param {Number} time - milliseconds until timer should expire/ring.
+   * @param {Number} time - milliseconds until timer should expire/ring. Defaults to 0.
    */
-  constructor(time) {
+  constructor(time = 0) {
     this.#timeToExpire = time
     this.#currentTime = time
   }
 
   /**
-   * @param {Number} time - Seconds until timer should expire/ring.
-   */
-  set setTime (time) {
-    this.#timeToExpire = time * 1000
-    this.#currentTime = time
-  }
-
-  /**
-   * Returns 
-   * @returns {String} - time in MM:SS format.
+   * Returns
+   * @returns {String} - time in HH:MM:SS format.
    */
   get getTime() {
     if (this.#startUnixTime) {
       const timePassedSinceStart = Date.now() - this.#startUnixTime
       this.#currentTime = this.#timeToExpire - timePassedSinceStart
-      return Math.floor(this.#currentTime)
-    } else {
-      return '00:00'
     }
+    return this.#convertMsToTimeString(this.#currentTime)
+  }
+
+  /**
+   * @param {Number} time - milliseconds until timer should expire/ring.
+   */
+  set setTime(time) {
+    this.#timeToExpire = time
+    this.#currentTime = time
   }
 
   #updateTime() {
@@ -68,24 +71,23 @@ export class Timer {
 
     if (this.#currentTime <= 0) {
       this.#currentTime = 0
-      // Skicka "end" event
-
+      this.#triggerEvent('expired', this.#currentTime)
       return
     }
 
     // skicka event 'time-updated'
+    this.#triggerEvent('time-updated', this.#currentTime)
 
     setTimeout(() => this.#updateTime(), this.#updateFrequency)
   }
 
-
   start() {
     if (this.#isRunning) return
 
-    if(!this.#isPaused) {
+    if (!this.#isPaused) {
       this.#startUnixTime = Date.now()
     }
-    
+
     this.#isPaused = false
     this.#isRunning = true
 
@@ -93,10 +95,44 @@ export class Timer {
   }
 
   pause() {
-    console.log('TOOD: PAUSE TIMER');
+    console.log('TOOD: PAUSE TIMER')
   }
 
   stop() {
-    console.log('TOOD: STOP TIMER');
+    console.log('TOOD: STOP TIMER')
+  }
+
+  onUpdate(callback) {
+    this.#eventHandlerElement.addEventListener('time-updated', callback)
+  }
+
+  onExpire(callback) {
+    this.#eventHandlerElement.addEventListener('expired', callback)
+  }
+
+  #triggerEvent(eventName) {
+    const event = new CustomEvent(eventName, {
+      detail: {
+        time: this.getTime,
+      },
+    })
+    this.#eventHandlerElement.dispatchEvent(event)
+  }
+
+  /**
+   *
+   * @param {Number} timeInMs
+   * @returns {String} - Time string in format HH:MM:SS
+   */
+  #convertMsToTimeString(timeInMs) {
+    // TODO: Ta bort onödiga nollor..
+    // Bugg rundar nedåt.. Är på 00:00 en sekund innan Beep Boop
+
+    // const seconds = Math.floor((timeInMs / 1000) % 60)
+    // const minutes = Math.floor((timeInMs / 1000 / 60) % 60)
+    // const hours = Math.floor((timeInMs / 1000 / 60 / 60) % 24)
+    const timeStringLong = new Date(timeInMs).toISOString().slice(11, 19)
+
+    return timeStringLong
   }
 }
