@@ -31,7 +31,7 @@ export class Timer {
    * Frequency of timer updates. Tick frequency.
    * @type {Number} - milliseconds
    */
-  #updateFrequency = 1000
+  #updateFrequency = 25
 
   /**
    * Identifies the timer created by the update timer timeout.
@@ -131,19 +131,48 @@ export class Timer {
   }
 
   /**
+   * Coverts milliseconds to HH:MM:SS:hh. SS:hh is always shown.
    *
    * @param {Number} timeInMs
-   * @returns {String} - Time string in format HH:MM:SS
+   * @returns {String} - Time string in format HH:MM:SS:PP
    */
   #convertMsToTimeString(timeInMs) {
-    // TODO: Ta bort onödiga nollor..
-    // Bugg rundar nedåt.. Är på 00:00 en sekund innan Beep Boop
+    // TODO: Snygga till lösning...
 
-    // const seconds = Math.floor((timeInMs / 1000) % 60)
-    // const minutes = Math.floor((timeInMs / 1000 / 60) % 60)
-    // const hours = Math.floor((timeInMs / 1000 / 60 / 60) % 24)
-    const timeStringLong = new Date(timeInMs).toISOString().slice(11, 19)
+    const hundredths = Math.floor((timeInMs / 10) % 100)
+    const seconds = Math.floor((timeInMs / 1000) % 60)
+    const minutes = Math.floor((timeInMs / 1000 / 60) % 60)
+    const hours = Math.floor((timeInMs / 1000 / 60 / 60) % 24)
 
-    return timeStringLong
+    let hourString = hours + ':'
+    let minutesString = minutes + ':'
+    let secondsString = seconds + ':'
+    let hundredthsString = hundredths
+
+    if (hours < 10) {
+      if (hours === 0) {
+        hourString = ''
+      } else {
+        hourString = '0' + hours + ':'
+      }
+    }
+
+    if (minutes < 10) {
+      if (hours === 0 && minutes === 0) {
+        minutesString = ''
+      } else {
+        minutesString = '0' + minutes + ':'
+      }
+    }
+
+    if (seconds < 10) {
+      secondsString = '0' + seconds + ':'
+    }
+
+    if (hundredths < 10) {
+      hundredthsString = '0' + hundredths
+    }
+
+    return hourString + minutesString + secondsString + hundredthsString
   }
 }
