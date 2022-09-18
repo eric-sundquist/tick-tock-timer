@@ -24,8 +24,8 @@ document.querySelector('#app').innerHTML = `
 const timer = new Timer()
 setTimeDisplay(timer.getTime)
 
-timer.onUpdate(() => {
-  setTimeDisplay(timer.getTime)
+timer.onUpdate((event) => {
+  setTimeDisplay(event.detail.time)
 })
 
 timer.onExpire(() => {
