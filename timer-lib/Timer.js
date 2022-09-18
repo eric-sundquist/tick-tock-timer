@@ -34,6 +34,12 @@ export class Timer {
   #updateFrequency = 1000
 
   /**
+   * Identifies the timer created by the update timer timeout.
+   * @type {Number}
+   */
+  #timeoutID
+
+  /**
    * Creates intance of class.
    * @param {Number} time - milliseconds until timer should expire/ring. Defaults to 0.
    */
@@ -78,7 +84,7 @@ export class Timer {
     // skicka event 'time-updated'
     this.#triggerEvent('time-updated', this.#currentTime)
 
-    setTimeout(() => this.#updateTime(), this.#updateFrequency)
+    this.#timeoutID = setTimeout(() => this.#updateTime(), this.#updateFrequency)
   }
 
   start() {
@@ -99,7 +105,10 @@ export class Timer {
   }
 
   stop() {
-    console.log('TOOD: STOP TIMER')
+    this.#isRunning = false
+    this.#isPaused = false
+
+    clearTimeout(this.#timeoutID)
   }
 
   onUpdate(callback) {

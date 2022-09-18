@@ -9,7 +9,7 @@ document.querySelector('#app').innerHTML = `
     </p>
     <form id="set-timer-form">
       <input type="number" id="set-timer" name="set-timer" min="0">
-      <button type="submit" id="create-timer-btn">Create Timer</button>
+      <button type="submit" id="create-timer-btn">Set Timer</button>
 
     </form>
     <div id="timers-container">
