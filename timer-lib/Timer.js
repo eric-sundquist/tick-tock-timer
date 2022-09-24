@@ -31,7 +31,7 @@ export class Timer {
    * Frequency of timer updates. Tick frequency.
    * @type {Number} - milliseconds
    */
-  #updateFrequency = 25
+  #updateFrequency
 
   /**
    * Identifies the timer created by the update timer timeout.
@@ -42,9 +42,11 @@ export class Timer {
   /**
    * Creates intance of class.
    * @param {Number} time - milliseconds until timer should expire/ring. Defaults to 0.
+   * @param {Number} updateFreq - milliseconds between updating time. Defaults to 50.
    */
-  constructor(time = 0) {
+  constructor(time = 0, updateFreq = 50) {
     this.#expireTime = time
+    this.#updateFrequency = updateFreq
   }
 
   /**
@@ -74,7 +76,7 @@ export class Timer {
       return
     }
 
-    this.#triggerEvent('time-updated')
+    this.#triggerEvent('updated')
 
     this.#timeoutID = setTimeout(() => this.#updateTime(), this.#updateFrequency)
   }
@@ -93,6 +95,7 @@ export class Timer {
     this.#isPaused = false
     this.#isRunning = true
 
+    this.#triggerEvent('started')
     this.#updateTime()
   }
 
@@ -102,23 +105,26 @@ export class Timer {
     this.#isPaused = true
     this.#isRunning = false
 
+    this.#triggerEvent('paused')
     clearTimeout(this.#timeoutID)
   }
 
-  stop() {
+  reset() {
     this.#isRunning = false
     this.#isPaused = false
     this.#ellapsedTime = 0
 
+    this.#triggerEvent('reseted')
     clearTimeout(this.#timeoutID)
   }
 
-  onUpdate(callback) {
-    this.#eventHandlerElement.addEventListener('time-updated', callback)
-  }
-
-  onExpire(callback) {
-    this.#eventHandlerElement.addEventListener('expired', callback)
+  /**
+   *
+   * @param {String} event - Event to listen for.
+   * @param {Function} callback - callback to run when event is triggered.
+   */
+  onEvent(event, callback) {
+    this.#eventHandlerElement.addEventListener(event, callback)
   }
 
   #triggerEvent(eventName) {

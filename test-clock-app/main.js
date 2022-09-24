@@ -10,13 +10,14 @@ document.querySelector('#app').innerHTML = `
     <form id="set-timer-form">
       <input type="number" id="set-timer" name="set-timer" min="0">
       <button type="submit" id="create-timer-btn">Set Timer</button>
-
     </form>
+
     <div id="timers-container">
       <h3 id="timer-display">time here</h3>
       <button id="start">Start</button>
       <button id="pause">Pause</button>
-      <button id="stop">Stop</button>
+      <button id="reset">Reset</button>
+
     </div>
   </div>
   `
@@ -24,11 +25,15 @@ document.querySelector('#app').innerHTML = `
 const timer = new Timer()
 setTimeDisplay(timer.getTime)
 
-timer.onUpdate((event) => {
+timer.onEvent('updated', (event) => {
   setTimeDisplay(event.detail.time)
 })
 
-timer.onExpire(() => {
+timer.onEvent('reseted', (event) => {
+  setTimeDisplay(event.detail.time)
+})
+
+timer.onEvent('expired', () => {
   setTimeDisplay('BEEEP BEEEP BOOP')
 })
 
@@ -48,8 +53,8 @@ document.querySelector('#pause').addEventListener('click', () => {
   timer.pause()
 })
 
-document.querySelector('#stop').addEventListener('click', () => {
-  timer.stop()
+document.querySelector('#reset').addEventListener('click', () => {
+  timer.reset()
 })
 
 function setTimeDisplay(time) {
