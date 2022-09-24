@@ -68,18 +68,14 @@ export class Timer {
     }
 
     this.#triggerEvent('started')
-    this.#setRunningState()
-    this.#updateTime()
+    this.#startTimer()
   }
 
   pause() {
     if (this.#isPaused || !this.#isRunning) return
 
-    this.#isPaused = true
-    this.#isRunning = false
-
     this.#triggerEvent('paused')
-    clearTimeout(this.#timeoutID)
+    this.#pauseTimer()
   }
 
   reset() {
@@ -185,8 +181,15 @@ export class Timer {
     this.#startTimeInMS = Date.now() - this.#ellapsedTimeInMS
   }
 
-  #setRunningState() {
+  #startTimer() {
     this.#isPaused = false
     this.#isRunning = true
+    this.#updateTime()
+  }
+
+  #pauseTimer() {
+    this.#isPaused = true
+    this.#isRunning = false
+    clearTimeout(this.#timeoutID)
   }
 }
