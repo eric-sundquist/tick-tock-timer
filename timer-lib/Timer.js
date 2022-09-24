@@ -1,66 +1,60 @@
 export class Timer {
   /**
-   * Milliseconds since Unix epoch when timer initially started
    * @type {Number} - milliseconds
    */
-  #startTime
+  #startTimeInMS
 
   /**
-   * Current internal time of timer. (counting up)
    * @type {Number} - milliseconds
    */
-  #ellapsedTime = 0
+  #ellapsedTimeInMS
 
   /**
-   * Set time for timer to expire.
    * @type {Number} - milliseconds
    */
-  #expireTime = 0
+  #expireTime
 
-  #isRunning = false
+  #isRunning
 
-  #isPaused = false
+  #isPaused
 
   /**
-   * Emitts timer events and is handle for listening to those events.
    * @type {HTMLSpanElement}
    */
   #eventHandlerElement = document.createElement('span')
 
   /**
-   * Frequency of timer updates. Tick frequency.
    * @type {Number} - milliseconds
    */
-  #updateFrequency
+  #updateFrequencyInMS
 
-  /**
-   * Identifies the timer created by the update timer timeout.
-   * @type {Number}
-   */
   #timeoutID
 
   /**
-   * Creates intance of class.
+   * Creates intance of the Timer class.
    * @param {Number} time - milliseconds until timer should expire/ring. Defaults to 0.
    * @param {Number} updateFreq - milliseconds between updating time. Defaults to 50.
    */
   constructor(time = 0, updateFreq = 50) {
     this.#expireTime = time
-    this.#updateFrequency = updateFreq
+    this.#updateFrequencyInMS = updateFreq
+    this.#ellapsedTimeInMS = 0
+    this.#isRunning = false
+    this.#isPaused = false
   }
 
   /**
    * Returns
    * @returns {String} - time in HH:MM:SS format.
    */
-  get getTime() {
-    return this.#convertMsToTimeString(this.#expireTime - this.#ellapsedTime)
+  get time() {
+    return this.#convertMsToTimeString(this.#expireTime - this.#ellapsedTimeInMS)
   }
 
   /**
    * @param {Number} time - milliseconds until timer should expire/ring.
    */
-  set setTime(time) {
+  set time(time) {
     this.reset()
 
     this.#expireTime = time
@@ -69,10 +63,10 @@ export class Timer {
   #updateTime() {
     if (!this.#isRunning || this.#isPaused) return
 
-    this.#ellapsedTime = Date.now() - this.#startTime
+    this.#ellapsedTimeInMS = Date.now() - this.#startTimeInMS
 
-    if (this.#ellapsedTime >= this.#expireTime) {
-      this.#ellapsedTime = this.#expireTime
+    if (this.#ellapsedTimeInMS >= this.#expireTime) {
+      this.#ellapsedTimeInMS = this.#expireTime
       this.#triggerEvent('expired')
       this.#isRunning = false
       this.#isPaused = false
@@ -81,18 +75,18 @@ export class Timer {
 
     this.#triggerEvent('updated')
 
-    this.#timeoutID = setTimeout(() => this.#updateTime(), this.#updateFrequency)
+    this.#timeoutID = setTimeout(() => this.#updateTime(), this.#updateFrequencyInMS)
   }
 
   start() {
     if (this.#isRunning) return
 
     if (!this.#isPaused) {
-      this.#startTime = Date.now()
+      this.#startTimeInMS = Date.now()
     }
 
     if (this.#isPaused) {
-      this.#startTime = Date.now() - this.#ellapsedTime
+      this.#startTimeInMS = Date.now() - this.#ellapsedTimeInMS
     }
 
     this.#isPaused = false
@@ -115,7 +109,7 @@ export class Timer {
   reset() {
     this.#isRunning = false
     this.#isPaused = false
-    this.#ellapsedTime = 0
+    this.#ellapsedTimeInMS = 0
 
     this.#triggerEvent('reseted')
     clearTimeout(this.#timeoutID)

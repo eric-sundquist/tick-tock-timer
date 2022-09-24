@@ -42,7 +42,7 @@ document.querySelector('#set-timer-form').addEventListener('submit', (event) => 
   const userSetTimerValue = parseInt(document.querySelector('#set-timer').value) * 1000 // convert to ms
 
   timer.setTime = userSetTimerValue
-  setTimeDisplay(timer.getTime)
+  setTimeDisplay(timer.time)
 })
 
 document.querySelector('#start').addEventListener('click', () => {
