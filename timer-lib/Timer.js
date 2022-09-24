@@ -44,55 +44,31 @@ export class Timer {
   }
 
   /**
-   * Returns
    * @returns {String} - time in HH:MM:SS format.
    */
-  get time() {
+  getTime() {
     return this.#convertMsToTimeString(this.#expireTime - this.#ellapsedTimeInMS)
   }
 
   /**
    * @param {Number} time - milliseconds until timer should expire/ring.
    */
-  set time(time) {
+  setTime(time) {
     this.reset()
-
     this.#expireTime = time
-  }
-
-  #updateTime() {
-    if (!this.#isRunning || this.#isPaused) return
-
-    this.#ellapsedTimeInMS = Date.now() - this.#startTimeInMS
-
-    if (this.#ellapsedTimeInMS >= this.#expireTime) {
-      this.#ellapsedTimeInMS = this.#expireTime
-      this.#triggerEvent('expired')
-      this.#isRunning = false
-      this.#isPaused = false
-      return
-    }
-
-    this.#triggerEvent('updated')
-
-    this.#timeoutID = setTimeout(() => this.#updateTime(), this.#updateFrequencyInMS)
   }
 
   start() {
     if (this.#isRunning) return
 
-    if (!this.#isPaused) {
-      this.#startTimeInMS = Date.now()
+    if (this.#isInitialStart) {
+      this.#setNewStartTime()
+    } else {
+      this.#updateStartTimeAfterPause()
     }
-
-    if (this.#isPaused) {
-      this.#startTimeInMS = Date.now() - this.#ellapsedTimeInMS
-    }
-
-    this.#isPaused = false
-    this.#isRunning = true
 
     this.#triggerEvent('started')
+    this.#setRunningState()
     this.#updateTime()
   }
 
@@ -131,6 +107,24 @@ export class Timer {
       },
     })
     this.#eventHandlerElement.dispatchEvent(event)
+  }
+
+  #updateTime() {
+    if (!this.#isRunning || this.#isPaused) return
+
+    this.#ellapsedTimeInMS = Date.now() - this.#startTimeInMS
+
+    if (this.#ellapsedTimeInMS >= this.#expireTime) {
+      this.#ellapsedTimeInMS = this.#expireTime
+      this.#triggerEvent('expired')
+      this.#isRunning = false
+      this.#isPaused = false
+      return
+    }
+
+    this.#triggerEvent('updated')
+
+    this.#timeoutID = setTimeout(() => this.#updateTime(), this.#updateFrequencyInMS)
   }
 
   /**
@@ -177,5 +171,22 @@ export class Timer {
     }
 
     return hourString + minutesString + secondsString + hundredthsString
+  }
+
+  #isInitialStart() {
+    return !this.#isPaused && !this.#isRunning
+  }
+
+  #setNewStartTime() {
+    this.#startTimeInMS = Date.now()
+  }
+
+  #updateStartTimeAfterPause() {
+    this.#startTimeInMS = Date.now() - this.#ellapsedTimeInMS
+  }
+
+  #setRunningState() {
+    this.#isPaused = false
+    this.#isRunning = true
   }
 }
