@@ -61,6 +61,8 @@ export class Timer {
    * @param {Number} time - milliseconds until timer should expire/ring.
    */
   set setTime(time) {
+    this.reset()
+
     this.#expireTime = time
   }
 
@@ -72,7 +74,8 @@ export class Timer {
     if (this.#ellapsedTime >= this.#expireTime) {
       this.#ellapsedTime = this.#expireTime
       this.#triggerEvent('expired')
-      this.stop()
+      this.#isRunning = false
+      this.#isPaused = false
       return
     }
 
