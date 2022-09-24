@@ -67,60 +67,47 @@ export class Timer {
       this.#updateStartTimeAfterPause()
     }
 
-    this.#triggerEvent('started')
-    this.#startTimer()
+    this.#dispatchEvent('started')
+    this.#setRunningState()
+    this.#updateTime()
   }
 
   pause() {
     if (this.#isPaused || !this.#isRunning) return
 
-    this.#triggerEvent('paused')
+    this.#dispatchEvent('paused')
+    this.#setPausedState()
     this.#pauseTimer()
   }
 
   reset() {
-    this.#isRunning = false
-    this.#isPaused = false
-    this.#ellapsedTimeInMS = 0
-
-    this.#triggerEvent('reseted')
-    clearTimeout(this.#timeoutID)
+    this.#dispatchEvent('reseted')
+    this.#setStoppedState()
+    this.#resetTimer()
   }
 
   /**
-   *
    * @param {String} event - Event to listen for.
    * @param {Function} callback - callback to run when event is triggered.
    */
-  onEvent(event, callback) {
+  addEventListener(event, callback) {
     this.#eventHandlerElement.addEventListener(event, callback)
   }
 
-  #triggerEvent(eventName) {
-    const event = new CustomEvent(eventName, {
-      detail: {
-        time: this.getTime,
-      },
-    })
+  #dispatchEvent(eventName) {
+    const event = this.#createEvent(eventName)
     this.#eventHandlerElement.dispatchEvent(event)
   }
 
   #updateTime() {
-    if (!this.#isRunning || this.#isPaused) return
+    this.#updateEllapsedTime()
 
-    this.#ellapsedTimeInMS = Date.now() - this.#startTimeInMS
-
-    if (this.#ellapsedTimeInMS >= this.#expireTime) {
-      this.#ellapsedTimeInMS = this.#expireTime
-      this.#triggerEvent('expired')
-      this.#isRunning = false
-      this.#isPaused = false
-      return
+    if (this.#isExpired) {
+      this.#endTimer()
+    } else {
+      this.#dispatchEvent('updated')
+      this.#setNextTimerUpdate()
     }
-
-    this.#triggerEvent('updated')
-
-    this.#timeoutID = setTimeout(() => this.#updateTime(), this.#updateFrequencyInMS)
   }
 
   /**
@@ -181,15 +168,57 @@ export class Timer {
     this.#startTimeInMS = Date.now() - this.#ellapsedTimeInMS
   }
 
-  #startTimer() {
+  #setRunningState() {
     this.#isPaused = false
     this.#isRunning = true
-    this.#updateTime()
+  }
+
+  #setPausedState() {
+    this.#isPaused = true
+    this.#isRunning = false
   }
 
   #pauseTimer() {
-    this.#isPaused = true
-    this.#isRunning = false
     clearTimeout(this.#timeoutID)
+  }
+
+  #setStoppedState() {
+    this.#isRunning = false
+    this.#isPaused = false
+  }
+
+  #resetTimer() {
+    this.#ellapsedTimeInMS = 0
+    clearTimeout(this.#timeoutID)
+  }
+
+  #createEvent(name) {
+    new CustomEvent(name, {
+      detail: {
+        time: this.getTime,
+      },
+    })
+  }
+
+  #endTimer() {
+    this.#ignoreOvershoot()
+    this.#setStoppedState()
+    this.#dispatchEvent('expired')
+  }
+
+  #updateEllapsedTime() {
+    this.#ellapsedTimeInMS = Date.now() - this.#startTimeInMS
+  }
+
+  #isExpired() {
+    return this.#ellapsedTimeInMS >= this.#expireTime
+  }
+
+  #ignoreOvershoot() {
+    this.#ellapsedTimeInMS = this.#expireTime
+  }
+
+  #setNextTimerUpdate() {
+    this.#timeoutID = setTimeout(() => this.#updateTime(), this.#updateFrequencyInMS)
   }
 }

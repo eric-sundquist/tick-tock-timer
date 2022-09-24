@@ -25,15 +25,15 @@ document.querySelector('#app').innerHTML = `
 const timer = new Timer()
 setTimeDisplay(timer.getTime)
 
-timer.onEvent('updated', (event) => {
+timer.addEventListener('updated', (event) => {
   setTimeDisplay(event.detail.time)
 })
 
-timer.onEvent('reseted', (event) => {
+timer.addEventListener('reseted', (event) => {
   setTimeDisplay(event.detail.time)
 })
 
-timer.onEvent('expired', () => {
+timer.addEventListener('expired', () => {
   setTimeDisplay('BEEEP BEEEP BOOP')
 })
 
