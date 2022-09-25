@@ -50,6 +50,7 @@ export class Timer {
     this.#ellapsedTime = 0
     this.#isRunning = false
     this.#isPaused = false
+    this.#startTimeInMS = 0
   }
 
   getTimeObject() {
@@ -73,7 +74,6 @@ export class Timer {
    */
   setTime(time) {
     this.reset()
-    console.log(time)
     this.#expireTime = time
   }
 
@@ -81,7 +81,6 @@ export class Timer {
     if (this.#isRunning) return
 
     if (this.#isInitialStart()) {
-      console.log('object')
       this.#setNewStartTime()
     } else {
       this.#updateStartTimeAfterPause()
@@ -104,6 +103,22 @@ export class Timer {
     this.#setStoppedState()
     this.#resetTimer()
     this.#dispatchEvent('reseted')
+  }
+
+  /**
+   * @param {Number} timeAdjustment - milliseconds. Positive to add time. Negative to substract.
+   */
+  adjustTime(timeAdjustment) {
+    if (!this.#isInitialStart()) {
+      this.#startTimeInMS += timeAdjustment
+      this.#updateEllapsedTime()
+
+      if (this.#isExpired()) {
+        this.#endTimer()
+      } else {
+        this.#dispatchEvent('updated')
+      }
+    }
   }
 
   /**

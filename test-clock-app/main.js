@@ -17,7 +17,8 @@ document.querySelector('#app').innerHTML = `
       <button id="start">Start</button>
       <button id="pause">Pause</button>
       <button id="reset">Reset</button>
-
+      <button id="addFive">+5s</button>
+      <button id="removeFive">-5s</button>
     </div>
   </div>
   `
@@ -55,6 +56,14 @@ document.querySelector('#pause').addEventListener('click', () => {
 
 document.querySelector('#reset').addEventListener('click', () => {
   timer.reset()
+})
+
+document.querySelector('#addFive').addEventListener('click', () => {
+  timer.adjustTime(5000)
+})
+
+document.querySelector('#removeFive').addEventListener('click', () => {
+  timer.adjustTime(-5000)
 })
 
 function setTimeDisplay(time) {

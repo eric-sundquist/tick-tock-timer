@@ -14,5 +14,7 @@
 
 # Todo
 
-- Refactorera till till clock engine och timer engine.
 - addTime och removeTime funktionalitet.
+- Error handling
+- testning
+- Reflektion
