@@ -73,35 +73,37 @@ export class Timer {
    */
   setTime(time) {
     this.reset()
+    console.log(time)
     this.#expireTime = time
   }
 
   start() {
     if (this.#isRunning) return
 
-    if (this.#isInitialStart) {
+    if (this.#isInitialStart()) {
+      console.log('object')
       this.#setNewStartTime()
     } else {
       this.#updateStartTimeAfterPause()
     }
 
-    this.#dispatchEvent('started')
     this.#setRunningState()
+    this.#dispatchEvent('started')
     this.#updateTime()
   }
 
   pause() {
     if (this.#isPaused || !this.#isRunning) return
 
-    this.#dispatchEvent('paused')
     this.#setPausedState()
     this.#pauseTimer()
+    this.#dispatchEvent('paused')
   }
 
   reset() {
-    this.#dispatchEvent('reseted')
     this.#setStoppedState()
     this.#resetTimer()
+    this.#dispatchEvent('reseted')
   }
 
   /**
@@ -120,7 +122,7 @@ export class Timer {
   #updateTime() {
     this.#updateEllapsedTime()
 
-    if (this.#isExpired) {
+    if (this.#isExpired()) {
       this.#endTimer()
     } else {
       this.#dispatchEvent('updated')
@@ -176,7 +178,7 @@ export class Timer {
   }
 
   #createEvent(name) {
-    new CustomEvent(name, {
+    return new CustomEvent(name, {
       detail: {
         timeObject: this.getTimeObject(),
         timeString: this.getTimeString(),
