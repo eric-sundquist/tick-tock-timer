@@ -53,30 +53,6 @@ export class Timer {
     this.#startTimeInMS = 0
   }
 
-  getTimeObject() {
-    return {
-      hours: Math.floor((this.#timeUntilExpire() / 1000 / 60 / 60) % 24),
-      minutes: Math.floor((this.#timeUntilExpire() / 1000 / 60) % 60),
-      seconds: Math.floor((this.#timeUntilExpire() / 1000) % 60),
-      hundredths: Math.floor((this.#timeUntilExpire() / 10) % 100),
-    }
-  }
-
-  /**
-   * @returns {String} - time in HH:MM:SS:hh format. Seconds and hundreths always shown.
-   */
-  getTimeString() {
-    return this.#formatTimeTo24hourString()
-  }
-
-  /**
-   * @param {Number} time - milliseconds until timer should expire/ring.
-   */
-  setTime(time) {
-    this.reset()
-    this.#expireTime = time
-  }
-
   start() {
     if (this.#isRunning) return
 
@@ -119,6 +95,42 @@ export class Timer {
         this.#dispatchEvent('updated')
       }
     }
+  }
+
+  /**
+   * @param {Number} time - milliseconds until timer should expire/ring.
+   */
+  setTime(time) {
+    this.reset()
+    this.#expireTime = time
+  }
+
+  getTimeObject() {
+    return {
+      hours: Math.floor((this.#timeUntilExpire() / 1000 / 60 / 60) % 24),
+      minutes: Math.floor((this.#timeUntilExpire() / 1000 / 60) % 60),
+      seconds: Math.floor((this.#timeUntilExpire() / 1000) % 60),
+      hundredths: Math.floor((this.#timeUntilExpire() / 10) % 100),
+    }
+  }
+
+  /**
+   * @returns {String} - time in HH:MM:SS:hh format. Seconds and hundreths always shown.
+   */
+  getTimeString() {
+    return this.#formatTimeTo24hourString()
+  }
+
+  get isRunning() {
+    return this.#isRunning
+  }
+
+  get isPaused() {
+    return this.#isPaused
+  }
+
+  get isExpired() {
+    return this.#isExpired()
   }
 
   /**
