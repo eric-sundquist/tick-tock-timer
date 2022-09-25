@@ -7,15 +7,21 @@ export class Timer {
   /**
    * @type {Number} - milliseconds
    */
-  #ellapsedTimeInMS
+  #ellapsedTime
 
   /**
    * @type {Number} - milliseconds
    */
   #expireTime
 
+  /**
+   * @type {boolean}
+   */
   #isRunning
 
+  /**
+   * @type {boolean}
+   */
   #isPaused
 
   /**
@@ -26,8 +32,11 @@ export class Timer {
   /**
    * @type {Number} - milliseconds
    */
-  #updateFrequencyInMS
+  #updateFrequency
 
+  /**
+   * @type {Number}
+   */
   #timeoutID
 
   /**
@@ -37,17 +46,26 @@ export class Timer {
    */
   constructor(time = 0, updateFreq = 50) {
     this.#expireTime = time
-    this.#updateFrequencyInMS = updateFreq
-    this.#ellapsedTimeInMS = 0
+    this.#updateFrequency = updateFreq
+    this.#ellapsedTime = 0
     this.#isRunning = false
     this.#isPaused = false
   }
 
+  getTimeObject() {
+    return {
+      hours: Math.floor((this.#timeUntilExpire() / 1000 / 60 / 60) % 24),
+      minutes: Math.floor((this.#timeUntilExpire() / 1000 / 60) % 60),
+      seconds: Math.floor((this.#timeUntilExpire() / 1000) % 60),
+      hundredths: Math.floor((this.#timeUntilExpire() / 10) % 100),
+    }
+  }
+
   /**
-   * @returns {String} - time in HH:MM:SS format.
+   * @returns {String} - time in HH:MM:SS:hh format. Seconds and hundreths always shown.
    */
-  getTime() {
-    return this.#convertMsToTimeString(this.#expireTime - this.#ellapsedTimeInMS)
+  getTimeString() {
+    return this.#formatTimeTo24hourString()
   }
 
   /**
@@ -110,50 +128,15 @@ export class Timer {
     }
   }
 
-  /**
-   * Coverts milliseconds to HH:MM:SS:hh. SS:hh is always shown.
-   *
-   * @param {Number} timeInMs
-   * @returns {String} - Time string in format HH:MM:SS:PP
-   */
-  #convertMsToTimeString(timeInMs) {
-    // TODO: Snygga till lösning...
+  #formatTimeTo24hourString() {
+    const timeObject = this.getTimeObject()
+    let timeString = ''
 
-    const hundredths = Math.floor((timeInMs / 10) % 100)
-    const seconds = Math.floor((timeInMs / 1000) % 60)
-    const minutes = Math.floor((timeInMs / 1000 / 60) % 60)
-    const hours = Math.floor((timeInMs / 1000 / 60 / 60) % 24)
-
-    let hourString = hours + ':'
-    let minutesString = minutes + ':'
-    let secondsString = seconds + ':'
-    let hundredthsString = hundredths
-
-    if (hours < 10) {
-      if (hours === 0) {
-        hourString = ''
-      } else {
-        hourString = '0' + hours + ':'
-      }
+    for (const timeUnit in timeObject) {
+      timeString += this.#formatTimeUnitValue(timeUnit, timeObject[timeUnit])
     }
 
-    if (minutes < 10) {
-      if (hours === 0 && minutes === 0) {
-        minutesString = ''
-      } else {
-        minutesString = '0' + minutes + ':'
-      }
-    }
-
-    if (seconds < 10) {
-      secondsString = '0' + seconds + ':'
-    }
-
-    if (hundredths < 10) {
-      hundredthsString = '0' + hundredths
-    }
-
-    return hourString + minutesString + secondsString + hundredthsString
+    return timeString
   }
 
   #isInitialStart() {
@@ -165,7 +148,7 @@ export class Timer {
   }
 
   #updateStartTimeAfterPause() {
-    this.#startTimeInMS = Date.now() - this.#ellapsedTimeInMS
+    this.#startTimeInMS = Date.now() - this.#ellapsedTime
   }
 
   #setRunningState() {
@@ -188,14 +171,15 @@ export class Timer {
   }
 
   #resetTimer() {
-    this.#ellapsedTimeInMS = 0
+    this.#ellapsedTime = 0
     clearTimeout(this.#timeoutID)
   }
 
   #createEvent(name) {
     new CustomEvent(name, {
       detail: {
-        time: this.getTime,
+        timeObject: this.getTimeObject(),
+        timeString: this.getTimeString(),
       },
     })
   }
@@ -207,18 +191,62 @@ export class Timer {
   }
 
   #updateEllapsedTime() {
-    this.#ellapsedTimeInMS = Date.now() - this.#startTimeInMS
+    this.#ellapsedTime = Date.now() - this.#startTimeInMS
   }
 
   #isExpired() {
-    return this.#ellapsedTimeInMS >= this.#expireTime
+    return this.#ellapsedTime >= this.#expireTime
   }
 
   #ignoreOvershoot() {
-    this.#ellapsedTimeInMS = this.#expireTime
+    this.#ellapsedTime = this.#expireTime
   }
 
   #setNextTimerUpdate() {
-    this.#timeoutID = setTimeout(() => this.#updateTime(), this.#updateFrequencyInMS)
+    this.#timeoutID = setTimeout(() => this.#updateTime(), this.#updateFrequency)
+  }
+
+  /**
+   * @returns {Number} -milliseconds
+   */
+  #timeUntilExpire() {
+    return this.#expireTime - this.#ellapsedTime
+  }
+
+  /**
+   *
+   * @param {String} unit - time unit. ex 'seconds' or 'minutes'.
+   * @param {Number} value - value of unit.
+   */
+  #formatTimeUnitValue(unit, value) {
+    let timeString = value < 10 ? this.#padTimeString(value) : '' + value
+
+    timeString += this.#semicolonIfNotHundreths(unit)
+
+    if (value === 0) {
+      timeString = this.#showZerosOnlyForSecondsAndHundreths(unit, timeString)
+    }
+
+    return timeString
+  }
+
+  #padTimeString(value) {
+    return '0' + value
+  }
+
+  #semicolonIfNotHundreths(unit) {
+    if (unit === 'hundredths') {
+      return ''
+    } else {
+      return ':'
+    }
+  }
+
+  #showZerosOnlyForSecondsAndHundreths(unit, timeString) {
+    if (unit === 'seconds' || unit === 'hundredths') {
+      return timeString
+    } else {
+      return ''
+    }
   }
 }

@@ -23,14 +23,14 @@ document.querySelector('#app').innerHTML = `
   `
 
 const timer = new Timer()
-setTimeDisplay(timer.getTime)
+setTimeDisplay(timer.getTimeString())
 
 timer.addEventListener('updated', (event) => {
-  setTimeDisplay(event.detail.time)
+  setTimeDisplay(event.detail.timeString)
 })
 
 timer.addEventListener('reseted', (event) => {
-  setTimeDisplay(event.detail.time)
+  setTimeDisplay(event.detail.timeString)
 })
 
 timer.addEventListener('expired', () => {
@@ -42,7 +42,7 @@ document.querySelector('#set-timer-form').addEventListener('submit', (event) => 
   const userSetTimerValue = parseInt(document.querySelector('#set-timer').value) * 1000 // convert to ms
 
   timer.setTime = userSetTimerValue
-  setTimeDisplay(timer.time)
+  setTimeDisplay(timer.getTimeString())
 })
 
 document.querySelector('#start').addEventListener('click', () => {
