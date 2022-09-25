@@ -5,7 +5,7 @@ document.querySelector('#app').innerHTML = `
   <div>
     <h1>Hello Timer!</h1>
     <p>
-      Add time in seconds:
+      Set a time in seconds:
     </p>
     <form id="set-timer-form">
       <input type="number" id="set-timer" name="set-timer" min="0">
@@ -25,6 +25,10 @@ document.querySelector('#app').innerHTML = `
 
 const timer = new Timer()
 setTimeDisplay(timer.getTimeString())
+
+timer.addEventListener('started', (event) => {
+  console.log(event.detail.timeObject)
+})
 
 timer.addEventListener('updated', (event) => {
   setTimeDisplay(event.detail.timeString)

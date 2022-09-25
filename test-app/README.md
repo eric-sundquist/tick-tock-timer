@@ -1,3 +1,3 @@
 # Test Application for timer-lib
 
-To launch the test application..
+To launch the test application.

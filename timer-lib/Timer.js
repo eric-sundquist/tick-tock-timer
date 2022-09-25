@@ -53,6 +53,18 @@ export class Timer {
     this.#startTimeInMS = 0
   }
 
+  get isRunning() {
+    return this.#isRunning
+  }
+
+  get isPaused() {
+    return this.#isPaused
+  }
+
+  get isExpired() {
+    return this.#isExpired()
+  }
+
   start() {
     if (this.#isRunning) return
 
@@ -119,18 +131,6 @@ export class Timer {
    */
   getTimeString() {
     return this.#formatTimeTo24hourString()
-  }
-
-  get isRunning() {
-    return this.#isRunning
-  }
-
-  get isPaused() {
-    return this.#isPaused
-  }
-
-  get isExpired() {
-    return this.#isExpired()
   }
 
   /**
