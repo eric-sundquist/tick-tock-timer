@@ -1,5 +1,5 @@
 import './style.css'
-import { Timer } from '../timer-lib/Timer'
+import { Timer } from '../src/Timer'
 
 document.querySelector('#app').innerHTML = `
   <div>
