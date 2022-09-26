@@ -41,12 +41,10 @@ export class Timer {
 
   /**
    * Creates intance of the Timer class.
-   * @param {Number} time - milliseconds until timer should expire/ring. Defaults to 0.
-   * @param {Number} updateFreq - milliseconds between updating time. Defaults to 50.
    */
-  constructor(time = 0, updateFreq = 50) {
-    this.#expireTime = time
-    this.#updateFrequency = updateFreq
+  constructor() {
+    this.#expireTime = 0
+    this.#updateFrequency = 50
     this.#ellapsedTime = 0
     this.#isRunning = false
     this.#isPaused = false
@@ -97,6 +95,8 @@ export class Timer {
    * @param {Number} timeAdjustment - milliseconds. Positive to add time. Negative to substract.
    */
   adjustTime(timeAdjustment) {
+    this.#validateTimeAdjustmentInput(timeAdjustment)
+
     if (!this.#isInitialStart()) {
       this.#startTimeInMS += timeAdjustment
       this.#updateEllapsedTime()
@@ -113,6 +113,7 @@ export class Timer {
    * @param {Number} time - milliseconds until timer should expire/ring.
    */
   setTime(time) {
+    this.#validateSetTimeInput(time)
     this.reset()
     this.#expireTime = time
   }
@@ -276,6 +277,28 @@ export class Timer {
       return timeString
     } else {
       return ''
+    }
+  }
+
+  #isNotAValidInteger(number) {
+    return Number.isInteger(number) || Number.isNaN(number)
+  }
+
+  /**
+   * @throws {TypeError} - if argument is not valid.
+   */
+  #validateSetTimeInput(time) {
+    if (this.#isNotAValidInteger(time) || time < 0) {
+      throw new TypeError('Recieved argument is not of right type. Expected positive integer.')
+    }
+  }
+
+  /**
+   * @throws {TypeError} - if argument is not valid.
+   */
+  #validateTimeAdjustmentInput(timeAdjustment) {
+    if (this.#isNotAValidInteger(timeAdjustment)) {
+      throw new TypeError('Recieved argument is not of right type. Expected positive integer.')
     }
   }
 }

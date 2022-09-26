@@ -5,13 +5,21 @@ Tick Tock Timer is a library that helps you to easily create a countdown timer i
 ## Basic usage
 
 ```javascript
-// TODO need to update this...
+// TODO need to update this import...
 import { Timer } from 'Timer.js';
 
-const timer = new Timer(10000);
+const timer = new Timer(10000, 100); // Sets timer to 10 seconds with a 100ms update frequency.
 
 timer.start();
 ```
+
+## Constructor
+
+The constructor takes two arguments.
+`new Timer(time, updateFreq)`
+
+- **time** sets the time of the timer
+- **updateFreq** sets how often the timer should update its time.
 
 ## Properties
 

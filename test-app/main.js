@@ -26,10 +26,6 @@ document.querySelector('#app').innerHTML = `
 const timer = new Timer()
 setTimeDisplay(timer.getTimeString())
 
-timer.addEventListener('started', (event) => {
-  console.log(event.detail.timeObject)
-})
-
 timer.addEventListener('updated', (event) => {
   setTimeDisplay(event.detail.timeString)
 })
