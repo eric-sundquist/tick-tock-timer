@@ -1,8 +1,8 @@
 # Tick Tock Timer
 
-Tick Tock Timer is a library that helps you to easily create a countdown timer in the browser.
+Tick Tock Timer is a library that helps you to easily create a countdown timer in the browser. Create a new timer instance and set the time of it. The timer can be started, paused and reseted. You can also adjust the time of the timer, by adding or removing time, while it is running. The timer dispatches events when its state is changed. For example on update or when it has expired.
 
-# Basic usage
+# Basic usage example
 
 ```javascript
 // TODO need to update this import...
@@ -13,6 +13,12 @@ const timer = new Timer();
 timer.setTimer(10000);
 
 timer.start();
+
+console.log(timer.getTimeString());
+
+timer.addEventListener('expired', () => {
+  console.log('Timer Expired');
+});
 ```
 
 # Properties
@@ -50,7 +56,7 @@ The Timer class has the following public methods.
 
 All Events have a detail property that contains information of the time of the timer when the event was dispatched.
 
-# Example use with addEventListener-method
+## Example use with addEventListener-method
 
 ```javascript
 const timer = new Timer(60000);
