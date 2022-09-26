@@ -2,26 +2,20 @@
 
 Tick Tock Timer is a library that helps you to easily create a countdown timer in the browser.
 
-## Basic usage
+# Basic usage
 
 ```javascript
 // TODO need to update this import...
 import { Timer } from 'Timer.js';
 
-const timer = new Timer(10000, 100); // Sets timer to 10 seconds with a 100ms update frequency.
+const timer = new Timer();
+
+timer.setTimer(10000);
 
 timer.start();
 ```
 
-## Constructor
-
-The constructor takes two arguments.
-`new Timer(time, updateFreq)`
-
-- **time** sets the time of the timer
-- **updateFreq** sets how often the timer should update its time.
-
-## Properties
+# Properties
 
 The Timer class has the following public properties.
 
@@ -29,7 +23,7 @@ The Timer class has the following public properties.
 - **isRunning** - boolean
 - **isPaused** - boolean
 
-## Methods
+# Methods
 
 The Timer class has the following public methods.
 
@@ -42,7 +36,7 @@ The Timer class has the following public methods.
 - **getTimeString()** - returns the currents time as a string formated as: _HH:MM:SS:hh_ Seconds and hundredths are even if they are 0.
 - **addEventListener(_event_, _callback_)** - lets you listen and execute your own code when an event from the timer is dispatched. _event_-argument Should be a string for the event to listen for. The _callback_-argument sets the callback that will be invoked when the event is dispatched. The callback accepts a single parameter which is fed an Event object containing details of the event that occurred. More on different events bellow.
 
-## Events
+# Events
 
 - **started** - is dispatched when the timer is started.
 
@@ -56,7 +50,7 @@ The Timer class has the following public methods.
 
 All Events have a detail property that contains information of the time of the timer when the event was dispatched.
 
-#### Example use with addEventListener-method
+# Example use with addEventListener-method
 
 ```javascript
 const timer = new Timer(60000);
@@ -66,7 +60,7 @@ timer.addEventListener('started', (event) => {
 });
 ```
 
-## Test application
+# Test application
 
 The test application is to test the library while also acting as an example of usage of it.
 

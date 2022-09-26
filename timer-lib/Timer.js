@@ -97,7 +97,7 @@ export class Timer {
   adjustTime(timeAdjustment) {
     this.#validateTimeAdjustmentInput(timeAdjustment)
 
-    if (!this.#isInitialStart()) {
+    if (this.#isRunning) {
       this.#startTimeInMS += timeAdjustment
       this.#updateEllapsedTime()
 
@@ -281,7 +281,7 @@ export class Timer {
   }
 
   #isNotAValidInteger(number) {
-    return Number.isInteger(number) || Number.isNaN(number)
+    return !Number.isInteger(number) || Number.isNaN(number)
   }
 
   /**

@@ -31,11 +31,21 @@ timer.addEventListener('updated', (event) => {
 })
 
 timer.addEventListener('reseted', (event) => {
+  console.log('Timer reseted')
   setTimeDisplay(event.detail.timeString)
 })
 
-timer.addEventListener('expired', () => {
-  setTimeDisplay('BEEEP BEEEP BOOP')
+timer.addEventListener('expired', (event) => {
+  console.log('Timer expired')
+  setTimeDisplay(event.detail.timeString)
+})
+
+timer.addEventListener('started', (event) => {
+  console.log('Timer started')
+})
+
+timer.addEventListener('paused', (event) => {
+  console.log('Timer paused')
 })
 
 document.querySelector('#set-timer-form').addEventListener('submit', (event) => {
