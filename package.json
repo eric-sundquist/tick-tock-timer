@@ -1,8 +1,8 @@
 {
   "name": "tick-tock-timer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Tick Tock Timer is a library that helps you to easily create a countdown timer in the browser. ",
-  "main": "index.js",
+  "main": "./src/Timer.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -17,5 +17,9 @@
     "eslint-config-prettier": "^8.5.0",
     "prettier": "2.7.1",
     "vite": "^3.1.0"
-  }
+  },
+  "keywords": [
+    "timer",
+    "countdown"
+  ]
 }

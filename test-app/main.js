@@ -40,11 +40,11 @@ timer.addEventListener('expired', (event) => {
   setTimeDisplay(event.detail.timeString)
 })
 
-timer.addEventListener('started', (event) => {
+timer.addEventListener('started', () => {
   console.log('Timer started')
 })
 
-timer.addEventListener('paused', (event) => {
+timer.addEventListener('paused', () => {
   console.log('Timer paused')
 })
 

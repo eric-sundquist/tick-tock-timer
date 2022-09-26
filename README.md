@@ -4,21 +4,27 @@ Tick Tock Timer is a library that helps you to easily create a countdown timer i
 
 # Basic usage example
 
+#### Install the package from npm
+
+`npm i tick-tock-timer`
+
+#### Import and use in your code
+
 ```javascript
 // TODO need to update this import...
-import { Timer } from 'Timer.js';
+import { Timer } from 'tick-tock-timer'
 
-const timer = new Timer();
+const timer = new Timer()
 
-timer.setTimer(10000);
+timer.setTimer(10000)
 
-timer.start();
+timer.start()
 
-console.log(timer.getTimeString());
+console.log(timer.getTimeString())
 
 timer.addEventListener('expired', () => {
-  console.log('Timer Expired');
-});
+  console.log('Timer Expired')
+})
 ```
 
 # Properties
@@ -59,11 +65,11 @@ All Events have a detail property that contains information of the time of the t
 ## Example use with addEventListener-method
 
 ```javascript
-const timer = new Timer(60000);
+const timer = new Timer(60000)
 timer.addEventListener('started', (event) => {
-  console.log(event.detail.timeString); // logs 01:00:00
-  console.log(event.detail.timeObject); // logs {hours: 0, minutes: 1, seconds: 0, hundredths: 0}
-});
+  console.log(event.detail.timeString) // logs 01:00:00
+  console.log(event.detail.timeObject) // logs {hours: 0, minutes: 1, seconds: 0, hundredths: 0}
+})
 ```
 
 # Test application
@@ -72,8 +78,7 @@ The test application is to test the library while also acting as an example of u
 
 To start up the test application
 
-- ` cd test-app` - go into the directory of the app
-- `npm i` - install app dependencies
+- `npm i` - install app dev dependencies
 - `npm run dev` - starts a development server that lets you use the test app
 
 # Licens
