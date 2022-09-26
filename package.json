@@ -1,6 +1,6 @@
 {
   "name": "tick-tock-timer",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Tick Tock Timer is a library that helps you to easily create a countdown timer in the browser. ",
   "main": "./src/Timer.js",
   "type": "module",

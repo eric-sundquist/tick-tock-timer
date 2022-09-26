@@ -118,6 +118,9 @@ export class Timer {
     this.#expireTime = time
   }
 
+  /**
+   * @returns {object}
+   */
   getTimeObject() {
     return {
       hours: Math.floor((this.#timeUntilExpire() / 1000 / 60 / 60) % 24),
@@ -244,7 +247,6 @@ export class Timer {
   }
 
   /**
-   *
    * @param {String} unit - time unit. ex 'seconds' or 'minutes'.
    * @param {Number} value - value of unit.
    */

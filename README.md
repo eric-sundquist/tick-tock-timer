@@ -11,7 +11,6 @@ Tick Tock Timer is a library that helps you to easily create a countdown timer i
 #### Import and use in your code
 
 ```javascript
-// TODO need to update this import...
 import { Timer } from 'tick-tock-timer'
 
 const timer = new Timer()
