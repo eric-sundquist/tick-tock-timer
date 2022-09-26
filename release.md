@@ -29,6 +29,8 @@ Förtydligande: Examinator kommer sätta betyg oberoende på vad ni anser.
 
 Beskriv hur du anpassat din kod och instruktioner för att någon annan programmerare skall kunna använda din modul. Om du skrivit instruktioner för din användare, länka till dessa. Om inte, beskriv här hur någon skall göra för att använda din modul.
 
+Github repositoriet är utrustad med en README-fil som beskriver vad modulen gör och hur man som utvecklare kan integrera den i sin egen kod.
+
 ## Beskrivning av min kod
 
 Beskriv din kod på en hög abstraktionsnivå. En kort beskrivning av dina viktigaste klasser och metoder. Skapa gärna ett klassdiagram som bild. Använd det ni lärt er så här långt i 1dv607. Kommunicera så att jag kan förstå.
