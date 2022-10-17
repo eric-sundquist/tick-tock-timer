@@ -15,7 +15,7 @@ import { Timer } from 'tick-tock-timer'
 
 const timer = new Timer()
 
-timer.setTimer(10000)
+timer.setTime(10000)
 
 timer.start()
 

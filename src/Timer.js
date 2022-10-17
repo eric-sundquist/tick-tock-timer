@@ -1,3 +1,5 @@
+import { MillisecondsTimeFormatter } from './MillisecondsTimeFormatter'
+
 export class Timer {
   /**
    * @type {Number} - milliseconds
@@ -122,19 +124,14 @@ export class Timer {
    * @returns {object}
    */
   getTimeObject() {
-    return {
-      hours: Math.floor((this.#timeUntilExpire() / 1000 / 60 / 60) % 24),
-      minutes: Math.floor((this.#timeUntilExpire() / 1000 / 60) % 60),
-      seconds: Math.floor((this.#timeUntilExpire() / 1000) % 60),
-      hundredths: Math.floor((this.#timeUntilExpire() / 10) % 100),
-    }
+    return new MillisecondsTimeFormatter(this.#timeUntilExpire()).getTimeObject()
   }
 
   /**
    * @returns {String} - time in HH:MM:SS:hh format. Seconds and hundreths always shown.
    */
   getTimeString() {
-    return this.#formatTimeTo24hourString()
+    return new MillisecondsTimeFormatter(this.#timeUntilExpire()).getTimeString()
   }
 
   /**
@@ -159,17 +156,6 @@ export class Timer {
       this.#dispatchEvent('updated')
       this.#setNextTimerUpdate()
     }
-  }
-
-  #formatTimeTo24hourString() {
-    const timeObject = this.getTimeObject()
-    let timeString = ''
-
-    for (const timeUnit in timeObject) {
-      timeString += this.#formatTimeUnitValue(timeUnit, timeObject[timeUnit])
-    }
-
-    return timeString
   }
 
   #isInitialStart() {
@@ -219,6 +205,7 @@ export class Timer {
 
   #endTimer() {
     this.#ignoreOvershoot()
+    this.#dispatchEvent('updated')
     this.#setStoppedState()
     this.#dispatchEvent('expired')
   }
@@ -244,42 +231,6 @@ export class Timer {
    */
   #timeUntilExpire() {
     return this.#expireTime - this.#ellapsedTime
-  }
-
-  /**
-   * @param {String} unit - time unit. ex 'seconds' or 'minutes'.
-   * @param {Number} value - value of unit.
-   */
-  #formatTimeUnitValue(unit, value) {
-    let timeString = value < 10 ? this.#padTimeString(value) : '' + value
-
-    timeString += this.#semicolonIfNotHundreths(unit)
-
-    if (value === 0) {
-      timeString = this.#showZerosOnlyForSecondsAndHundreths(unit, timeString)
-    }
-
-    return timeString
-  }
-
-  #padTimeString(value) {
-    return '0' + value
-  }
-
-  #semicolonIfNotHundreths(unit) {
-    if (unit === 'hundredths') {
-      return ''
-    } else {
-      return ':'
-    }
-  }
-
-  #showZerosOnlyForSecondsAndHundreths(unit, timeString) {
-    if (unit === 'seconds' || unit === 'hundredths') {
-      return timeString
-    } else {
-      return ''
-    }
   }
 
   #isNotAValidInteger(number) {
