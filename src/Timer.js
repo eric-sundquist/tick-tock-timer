@@ -134,6 +134,9 @@ export class Timer {
     return new MillisecondsTimeFormatter(this.#timeUntilExpire()).getTimeString()
   }
 
+  /**
+   * @returns {String} - time in MM:SS format.
+   */
   getMinutesAndSecondsString() {
     return new MillisecondsTimeFormatter(this.#timeUntilExpire()).getMinutesAndSecondsString()
   }
