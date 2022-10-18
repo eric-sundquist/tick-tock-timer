@@ -24,12 +24,23 @@ export class MillisecondsTimeFormatter {
     return this.#formatTimeTo24hourString()
   }
 
+  /**
+   * @returns {String} - time in MM:SS format. Rounds seconds up.
+   */
+  getMinutesAndSecondsString() {
+    const minutes = Math.floor((Math.ceil(this.#milliseconds / 1000) / 60) % 60)
+    let seconds = Math.floor(Math.ceil(this.#milliseconds / 1000) % 60)
+    if (seconds < 10) {
+      seconds = this.#padTimeString(seconds)
+    }
+    return `${minutes}:${seconds}`
+  }
+
   #formatTimeTo24hourString() {
     const timeObject = this.getTimeObject()
     let timeString = ''
 
     for (const timeUnit in timeObject) {
-      // unit - timePart
       timeString += this.#formatTimeUnitValue(timeUnit, timeObject[timeUnit])
     }
 

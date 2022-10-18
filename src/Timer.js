@@ -134,6 +134,10 @@ export class Timer {
     return new MillisecondsTimeFormatter(this.#timeUntilExpire()).getTimeString()
   }
 
+  getMinutesAndSecondsString() {
+    return new MillisecondsTimeFormatter(this.#timeUntilExpire()).getMinutesAndSecondsString()
+  }
+
   /**
    * @param {String} event - Event to listen for.
    * @param {Function} callback - callback to run when event is triggered.
@@ -199,6 +203,7 @@ export class Timer {
       detail: {
         timeObject: this.getTimeObject(),
         timeString: this.getTimeString(),
+        minutesSecondsString: this.getMinutesAndSecondsString(),
       },
     })
   }
