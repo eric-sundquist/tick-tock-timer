@@ -46,7 +46,7 @@ export class Timer {
    */
   constructor() {
     this.#expireTime = 0
-    this.#updateFrequency = 50
+    this.#updateFrequency = 100
     this.#ellapsedTime = 0
     this.#isRunning = false
     this.#isPaused = false
