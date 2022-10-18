@@ -30,10 +30,15 @@ export class MillisecondsTimeFormatter {
   getMinutesAndSecondsString() {
     const minutes = Math.floor((Math.ceil(this.#milliseconds / 1000) / 60) % 60)
     let seconds = Math.floor(Math.ceil(this.#milliseconds / 1000) % 60)
-    if (seconds < 10) {
+
+    if (seconds < 10 && minutes > 0) {
       seconds = this.#padTimeString(seconds)
     }
-    return `${minutes}:${seconds}`
+    if (minutes > 0) {
+      return `${minutes}:${seconds}`
+    } else {
+      return `${seconds}`
+    }
   }
 
   #formatTimeTo24hourString() {
